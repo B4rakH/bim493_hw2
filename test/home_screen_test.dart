@@ -21,5 +21,8 @@ void main() {
     expect(find.text('Brightness: 0%'), findsOneWidget);
     expect(find.text('Temperature: 23°C (room 20°C)'), findsOneWidget);
     expect(find.text('Status: Playing'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 3));
+    expect(find.text('Temperature: 23°C (room 21°C)'), findsOneWidget);
   });
 }

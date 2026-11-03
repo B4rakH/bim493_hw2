@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/smart_device.dart';
@@ -14,8 +16,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const Duration _temperatureUpdateInterval = Duration(seconds: 3);
+
   // Created once so rebuilds do not inflate SmartDevice.totalDevices.
   late final List<SmartDevice> _devices = _createDevices();
+  late final Timer _temperatureTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _temperatureTimer = Timer.periodic(
+      _temperatureUpdateInterval,
+      (_) => _updateRoomTemperatures(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _temperatureTimer.cancel();
+    super.dispose();
+  }
+
+  void _updateRoomTemperatures() {
+    setState(() {
+      for (final thermostat in _devices.whereType<Thermostat>()) {
+        thermostat.updateRoomTemperature();
+      }
+    });
+  }
 
   List<SmartDevice> _createDevices() {
     final eveningTime = DateTime.now().copyWith(hour: 22, minute: 30);

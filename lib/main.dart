@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'screens/home_screen.dart';
+
 void main() {
   runApp(const SmartHomeApp());
 }
@@ -15,9 +17,7 @@ class SmartHomeApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Smart Home Controller')),
-      ),
+      home: const HomeScreen(),
     );
   }
 }

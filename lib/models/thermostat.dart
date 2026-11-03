@@ -6,7 +6,7 @@ class Thermostat extends SmartDevice with Schedulable {
   static const int maxTemperature = 30;
   static const int ecoTemperature = 18;
 
-  final int roomTemperature;
+  int roomTemperature;
   int targetTemperature;
 
   Thermostat(
@@ -46,6 +46,12 @@ class Thermostat extends SmartDevice with Schedulable {
   void increaseTemperature() => _setTarget(targetTemperature + 1);
 
   void decreaseTemperature() => _setTarget(targetTemperature - 1);
+
+  /// Moves the room temperature one degree towards the target.
+  void updateRoomTemperature() {
+    if (!isOn || roomTemperature == targetTemperature) return;
+    roomTemperature += targetTemperature > roomTemperature ? 1 : -1;
+  }
 
   void _setTarget(int value) {
     targetTemperature = value.clamp(minTemperature, maxTemperature);

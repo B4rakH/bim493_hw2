@@ -52,6 +52,17 @@ void main() {
     expect(thermostat.targetTemperature, Thermostat.maxTemperature);
   });
 
+  test('room temperature moves towards the target and stops there', () {
+    final thermostat = Thermostat('Hall', roomTemperature: 20);
+
+    for (var i = 0; i < 5; i++) {
+      thermostat.updateRoomTemperature();
+    }
+
+    expect(thermostat.roomTemperature, thermostat.targetTemperature);
+    expect(thermostat.getStatus(), 'Idle');
+  });
+
   test('speaker pauses when disconnected', () {
     final speaker = SmartSpeaker('Hall', isPlaying: true);
 

@@ -62,16 +62,16 @@ bim493_hw2/
 │   │   ├── schedulable.dart      # Schedulable mixin (schedule, cancelSchedule, scheduleInfo)
 │   │   ├── smart_device.dart     # Abstract SmartDevice base class with the static device counter
 │   │   ├── smart_light.dart      # SmartLight: brightness, on/off switch
-│   │   ├── thermostat.dart       # Thermostat: target/room temperature, Heating/Cooling/Idle
+│   │   ├── thermostat.dart       # Thermostat: target/room temperature, Heating/Cooling/Idle, room simulation
 │   │   └── smart_speaker.dart    # SmartSpeaker: volume, play/pause
 │   ├── screens/
-│   │   └── home_screen.dart      # Device list and "Total Devices" bottom text
+│   │   └── home_screen.dart      # Device list, room temperature timer and "Total Devices" bottom text
 │   ├── widgets/
 │   │   └── device_card.dart      # Card with device info, status dot and type-specific control
 │   └── main.dart                 # Application entry point
 ├── test/
-│   ├── models_test.dart          # 5 model tests
-│   └── home_screen_test.dart     # 1 widget test for the home screen controls
+│   ├── models_test.dart          # 6 model tests
+│   └── home_screen_test.dart     # 1 widget test for the home screen controls and timer
 ├── pubspec.yaml
 └── README.md
 ```
@@ -108,7 +108,12 @@ bim493_hw2/
    | **Thermostat** | Target and room temperature | `Heating` / `Cooling` / `Idle` / `OFF` | − / + buttons (limited to 10–30 °C) |
    | **Smart Speaker** | Volume | `Playing` / `Paused` | Play / pause button |
 
-4. **Total Devices Counter:**
+4. **Room Temperature Simulation:**
+   - Every 3 seconds the room temperature moves 1 °C towards the target temperature.
+   - When the room reaches the target, the thermostat stops and its status becomes `Idle`; changing the target starts heating or cooling again.
+   - A turned-off thermostat does not change the room temperature.
+
+5. **Total Devices Counter:**
    - The bottom text `Total Devices: X` reads the static `SmartDevice.totalDevices` value.
    - The counter increases inside the `SmartDevice` constructor, so devices created with default and named constructors are both counted.
    - Devices are created only once per screen, so rebuilds do not inflate the counter.
@@ -123,8 +128,9 @@ bim493_hw2/
 | **Light Brightness** | A light that is off shows `Brightness: 0%`; turning it on shows its real brightness and status `ON`. | Checked |
 | **Thermostat Status** | Status changes from `Heating` to `Idle` to `Cooling` as the target temperature drops below the room temperature, and shows `OFF` when turned off. | Checked |
 | **Thermostat Limits** | The target temperature never goes above `Thermostat.maxTemperature`. | Checked |
+| **Room Temperature Simulation** | The room temperature moves one degree at a time towards the target and stops there, leaving the thermostat `Idle`. | Checked |
 | **Speaker Disconnect** | Disconnecting a playing speaker marks it disconnected and pauses it (`super.disconnect()`). | Checked |
-| **Home Screen Controls** | The home screen lists the devices with `Total Devices: 4`; the switch, + button and play button update brightness, temperature and status. | Checked |
+| **Home Screen Controls** | The home screen lists the devices with `Total Devices: 4`; the switch, + button and play button update brightness, temperature and status, and the timer updates the room temperature after 3 seconds. | Checked |
 
 All cases are verified via `flutter test` in `test/models_test.dart` and `test/home_screen_test.dart`.
 
@@ -133,5 +139,5 @@ All cases are verified via `flutter test` in `test/models_test.dart` and `test/h
 ## Known Limitations
 
 - **In-Memory State:** Device states are held in memory during the application session and reset when the application restarts. No database or persistent storage is used.
-- **Simulated Devices:** Devices are mock objects; the room temperature is a fixed value and no real hardware is connected.
+- **Simulated Devices:** Devices are mock objects; the room temperature is simulated and no real hardware is connected.
 - **Fixed Brightness & Volume:** Brightness and volume are set when a device is created and are not adjustable from the UI; each device type provides one main control as required.

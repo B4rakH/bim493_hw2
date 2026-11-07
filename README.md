@@ -37,7 +37,7 @@ This project was built and validated on **Flutter 3.47.6** on the **Stable chann
    ```bash
    flutter pub get
    ```
-3. Run static analysis (expected: 0 issues):
+3. Run static analysis:
    ```bash
    flutter analyze
    ```
